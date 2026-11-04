@@ -159,6 +159,8 @@ type Props = {
   randomness?: number;
   className?: string;
   alt?: string;
+  /** "ascii" draws characters (default); "dots" draws a halftone dot matrix. */
+  glyphs?: "ascii" | "dots";
 };
 
 function cssColor(varName: string, fallback: string): [number, number, number] {
@@ -184,11 +186,25 @@ function loadImage(url: string) {
   });
 }
 
-function makeAtlas() {
+/** Number of brightness levels in "dots" mode (halftone circles instead of characters). */
+const DOT_LEVELS = 24;
+
+function makeAtlas(glyphs: "ascii" | "dots" = "ascii") {
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 1024;
   const ctx = canvas.getContext("2d")!;
   ctx.clearRect(0, 0, 1024, 1024);
+  if (glyphs === "dots") {
+    // Halftone: level 0 is empty, then circles whose area grows linearly with brightness.
+    ctx.fillStyle = "#fff";
+    for (let i = 1; i < DOT_LEVELS; i++) {
+      const r = 6 + 20 * Math.sqrt(i / (DOT_LEVELS - 1));
+      ctx.beginPath();
+      ctx.arc(64 * (i % 16) + 32, 64 * Math.floor(i / 16) + 32, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    return canvas;
+  }
   ctx.font = `54px "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -211,6 +227,7 @@ export const AsciiImage = forwardRef<AsciiImageHandle, Props>(function AsciiImag
     randomness = 0.6,
     className,
     alt = "",
+    glyphs = "ascii",
   },
   ref,
 ) {
@@ -303,7 +320,7 @@ export const AsciiImage = forwardRef<AsciiImageHandle, Props>(function AsciiImag
     const colorDark = cssColor("--ascii-color-dark", "#1a0a2e");
     gl.uniform3fv(u("uColor"), color);
     gl.uniform3fv(u("uColorDark"), colorDark);
-    gl.uniform1f(u("uCharactersCount"), CHARS.length);
+    gl.uniform1f(u("uCharactersCount"), glyphs === "dots" ? DOT_LEVELS : CHARS.length);
     gl.uniform1f(u("uRandomness"), randomness);
     gl.uniform2f(u("uRevealOrigin"), revealOrigin.x, revealOrigin.y);
     gl.uniform1i(u("uEnableGooeyReveal"), touch ? 0 : 1);
@@ -327,11 +344,11 @@ export const AsciiImage = forwardRef<AsciiImageHandle, Props>(function AsciiImag
     let gooey = 0;
     let seed = 0;
 
-    const atlas = makeAtlas();
+    const atlas = makeAtlas(glyphs);
     texture(1, atlas, true, true);
     document.fonts?.ready.then(() => {
       if (disposed) return;
-      const fresh = makeAtlas();
+      const fresh = makeAtlas(glyphs);
       texture(1, fresh, true, true);
       dirty = true;
     });

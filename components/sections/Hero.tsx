@@ -26,6 +26,7 @@ export function Hero() {
   const logos = useRef<(HTMLSpanElement | null)[]>([]);
   const teaser = useRef<HTMLDivElement>(null);
   const ascii = useRef<AsciiImageHandle>(null);
+  const pill = useRef<HTMLSpanElement>(null);
   const reduced = usePrefersReducedMotion();
   const mdUp = useIsMdUp();
   const asciiDelay = mdUp ? ASCII_DELAY : 0;
@@ -34,6 +35,7 @@ export function Hero() {
     () => {
       if (reduced) return;
       gsap.set([ctas.current, teaser.current, ...logos.current].filter(Boolean), { opacity: 0, y: 20 });
+      gsap.set(pill.current, { opacity: 0 });
       // Hero content drifts down (yPercent 35) while the hero scrolls away.
       gsap.to(push.current, {
         yPercent: 35,
@@ -48,6 +50,8 @@ export function Hero() {
     (delay) => {
       if (reduced) return ascii.current?.showInstantly();
       ascii.current?.reveal(delay);
+      // The pill's label fades in once the dot reveal has swept past it.
+      gsap.to(pill.current, { opacity: 1, duration: 0.6, ease: "power3.out", delay: delay + 1.9 });
     },
     { priority: 0 },
   );
@@ -75,7 +79,7 @@ export function Hero() {
         <div className="grid-layout min-h-[calc(100svh-52px)]">
           <div className="pointer-events-none relative z-10 col-span-12 flex flex-col items-start justify-between pb-16 lg:col-span-7 lg:pb-32">
             <div className="flex flex-col justify-start gap-24 pt-24 lg:mt-auto lg:mb-auto lg:justify-center lg:gap-32 lg:pt-0">
-              <AnimatedHeadline ref={headline} as="h1" className="text-foreground" skip={reduced}>
+              <AnimatedHeadline ref={headline} as="h1" className="text-foreground" skip={reduced} accentEnd>
                 {hero.headline}
               </AnimatedHeadline>
               <AnimatedSubtext
@@ -113,7 +117,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="absolute top-[35%] right-0 bottom-0 w-9/10 items-center justify-center overflow-hidden lg:relative lg:inset-auto lg:col-span-5 lg:flex lg:w-auto">
+          <div className="absolute top-[35%] right-0 bottom-0 w-9/10 items-center justify-center overflow-hidden lg:relative lg:inset-auto lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:flex lg:w-auto">
             <AsciiImage
               ref={ascii}
               src={a.src}
@@ -122,8 +126,23 @@ export function Hero() {
               cellSize={14}
               parallaxIntensity={0.12}
               revealOrigin={{ x: 0.2, y: 0.65 }}
+              alignY="center"
+              glyphs="dots"
               alt={a.alt}
             />
+            {/* Crisp label on the dot-matrix "Booking confirmed" pill. Positioned in the art's own
+                coordinates (1100×900, contain + centred), so it tracks the image at any size. */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center [container-type:size]">
+              <div className="relative [container-type:inline-size]" style={{ width: `min(100cqw, calc(100cqh * ${a.width / a.height}))`, aspectRatio: `${a.width} / ${a.height}` }}>
+                <span
+                  ref={pill}
+                  className="absolute -translate-y-1/2 font-medium whitespace-nowrap text-foreground"
+                  style={{ left: `${(866 / a.width) * 100}%`, top: `${(371 / a.height) * 100}%`, fontSize: "max(11px, 2.05cqw)" }}
+                >
+                  {hero.artLabel}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 

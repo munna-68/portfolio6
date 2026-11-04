@@ -53,6 +53,7 @@ export const hero = {
   primaryCta: { label: "See the work", href: "/work" },
   secondaryCta: { label: "See pricing", href: "/pricing" },
   trustedBy: ["Madysen's Pet Care", "Kennedi's Grooming", "Burnett's Digital", "+ 15 concept builds"],
+  artLabel: "Booking confirmed",
   teaser: { label: "Now building", title: "Baker storefronts", href: "/work/bake-house", slot: "hero-teaser" as AssetSlot },
 };
 

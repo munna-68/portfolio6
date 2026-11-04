@@ -28,8 +28,24 @@ type Props = {
   skip?: boolean;
   /** "scroll" reveals once the headline's top crosses the viewport bottom; "manual" waits for reveal(). */
   trigger?: "manual" | "scroll";
+  /** Render a trailing "." (or "!"/"?") in the brand accent, e.g. "small businesses." */
+  accentEnd?: boolean;
   ref?: Ref<AnimatedHeadlineHandle>;
 };
+
+/** Splits a trailing punctuation mark off so it can be coloured with the accent. */
+function withAccentEnd(text: string, on: boolean, isLast: boolean) {
+  if (!on || !isLast) return text;
+  const m = text.match(/^(.*?)([.!?])$/s);
+  return m ? (
+    <>
+      {m[1]}
+      <span className="text-brand">{m[2]}</span>
+    </>
+  ) : (
+    text
+  );
+}
 
 /**
  * Block-wipe line reveal (reference: AnimatedHeadline).
@@ -45,6 +61,7 @@ export function AnimatedHeadline({
   wrapperClassName,
   skip,
   trigger = "manual",
+  accentEnd = false,
   ref,
 }: Props) {
   const reduced = usePrefersReducedMotion();
@@ -156,11 +173,11 @@ export function AnimatedHeadline({
           {row
             .split(/\s+/)
             .filter(Boolean)
-            .map((word, w) => (
+            .map((word, w, all) => (
               <Fragment key={w}>
                 {w > 0 && " "}
                 <span data-word data-explicit-line={r}>
-                  {word}
+                  {withAccentEnd(word, accentEnd, r === children.split("\n").length - 1 && w === all.length - 1)}
                 </span>
               </Fragment>
             ))}
@@ -174,7 +191,7 @@ export function AnimatedHeadline({
           {i > 0 && <br />}
           <div data-line={i} className="relative inline-block">
             <span data-line-inner className="block whitespace-nowrap">
-              {line}
+              {withAccentEnd(line, accentEnd, i === lines.length - 1)}
             </span>
             {!off && (
               <>

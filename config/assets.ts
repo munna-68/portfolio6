@@ -19,12 +19,14 @@ const sanity = (id: string, query = "w=1600&q=85&auto=format") =>
   `https://cdn.sanity.io/images/degpnzrx/production/${id}?${query}`;
 
 export const assets = {
-  // Hero ASCII art: a phone running a booking calendar with a "Deposit paid" card (transparent WebP).
-  // Drawn in code; regenerate or replace with your own render. Bright pixels become dense glyphs.
-  "hero-ascii": { src: "/images/brand/hero-booking.webp", width: 800, height: 1160, alt: "A phone showing a booking calendar with a deposit-paid confirmation, rendered as ASCII art" },
-  // Grayscale depth map for the hero art (white = near): the floating card and button sit closest.
-  "hero-ascii-depth": { src: "/images/brand/hero-booking-depth.webp", width: 800, height: 1160, alt: "" },
-  "hero-ascii-mobile": { src: "/images/brand/hero-booking-mobile.webp", width: 400, height: 580, alt: "A phone showing a booking calendar, rendered as ASCII art" },
+  // Hero art: a tilted booking card (calendar, slot grid, confirmed slot) with team, clock and
+  // "Booking confirmed" tiles and a dotted orbit, rendered by AsciiImage as a halftone dot matrix.
+  // Transparent WebP drawn in code; brightness = dot size. The pill label is HTML (Hero.tsx), so if
+  // you replace this art, update the label position there too.
+  "hero-ascii": { src: "/images/brand/hero-booking.webp", width: 1100, height: 900, alt: "Booking system card with a confirmed slot, drawn as a dot matrix" },
+  // Grayscale depth map (white = near): floating tiles closest, card behind, floor furthest.
+  "hero-ascii-depth": { src: "/images/brand/hero-booking-depth.webp", width: 1100, height: 900, alt: "" },
+  "hero-ascii-mobile": { src: "/images/brand/hero-booking-mobile.webp", width: 550, height: 450, alt: "Booking system card drawn as a dot matrix" },
   // "Now building" teaser in the hero's bottom-right corner
   "hero-teaser": { src: "/images/work/bake-house.webp", width: 1200, height: 800, alt: "Bake House baker storefront demo" },
   // Stats section media card (portrait)
