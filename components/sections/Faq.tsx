@@ -84,21 +84,25 @@ function Item({ q, a, isOpen, onToggle, isDesktop }: { q: string; a: string; isO
   );
 }
 
-export function Faq() {
+export function Faq({
+  headline = faq.headline,
+  items = faq.items,
+  theme = "dark",
+}: { headline?: string; items?: { q: string; a: string }[]; theme?: "light" | "dark" } = {}) {
   const [open, setOpen] = useState<number | null>(null);
   const isDesktop = useIsDesktop();
   return (
-    <section data-section data-theme="dark" className="bg-background py-64 text-foreground lg:py-96">
+    <section data-section data-theme={theme} className="bg-background py-64 text-foreground lg:py-96">
       <div className="grid-container">
         <div className="grid-layout">
           <div className="sticky top-0 z-10 col-span-12 -mx-(--site-grid-margin) bg-background px-(--site-grid-margin) pt-header pb-32 lg:top-header lg:z-auto lg:col-span-4 lg:mx-0 lg:self-start lg:bg-transparent lg:px-0 lg:pt-32">
             <AnimatedHeadline as="h2" trigger="scroll">
-              {faq.headline}
+              {headline}
             </AnimatedHeadline>
           </div>
           <div className="col-span-12 mt-48 lg:col-span-6 lg:col-start-6 lg:mt-0">
             <ScrambleGroup stagger={0.08} start="top 85%" className="w-full">
-              {faq.items.map((item, i) => (
+              {items.map((item, i) => (
                 <Item
                   key={item.q}
                   q={item.q}

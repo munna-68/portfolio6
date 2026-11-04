@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { brand, headerCta } from "@/config/content";
+import { SiteKeepLogo } from "@/components/ui/SiteKeepLogo";
 import { site } from "@/config/site";
 import { useIsDesktop, useIsMdUp, useIsoLayoutEffect, usePrefersReducedMotion } from "@/lib/hooks";
 import { cx } from "@/lib/cx";
@@ -53,18 +54,11 @@ function MenuButton({ isOpen, onClick }: { isOpen: boolean; onClick: () => void 
   );
 }
 
-/** PLACEHOLDER logo: two stacked words; the second slides in while the menu is open. Swap for your SVG. */
-function HeaderLogo({ isMenuOpen }: { isMenuOpen: boolean }) {
-  const word = "block h-24 shrink-0 text-[26px] leading-[24px] font-bold uppercase tracking-tighter text-foreground transition-colors duration-300";
+/** SiteKeep wordmark (SVG from portfolio4). SITE follows the header theme; KEEP is brand orange. */
+function HeaderLogo() {
   return (
-    <TransitionLink href="/" aria-label={`${brand.name} – Home`} className="relative block h-24 shrink-0 overflow-hidden">
-      <div
-        className="flex flex-col gap-2 transition-transform duration-500 ease-out"
-        style={{ transform: `translateY(${isMenuOpen ? -26 : 0}px)` }}
-      >
-        <span className={word}>{brand.logoWordOne}</span>
-        <span className={word}>{brand.logoWordTwo}</span>
-      </div>
+    <TransitionLink href="/" aria-label={`${brand.name} – Home`} className="relative block shrink-0 text-foreground transition-colors duration-300">
+      <SiteKeepLogo className="block h-18 w-auto lg:h-22" />
     </TransitionLink>
   );
 }
@@ -181,7 +175,7 @@ export function Header() {
           <div className="py-16">
             <div className="grid grid-cols-2 items-center lg:grid-cols-3">
               <div className="justify-self-start">
-                <HeaderLogo isMenuOpen={menuOpen} />
+                <HeaderLogo />
               </div>
               <div className="justify-self-end lg:justify-self-center">
                 <MenuButton isOpen={menuOpen} onClick={() => setMenuOpen((o) => !o)} />

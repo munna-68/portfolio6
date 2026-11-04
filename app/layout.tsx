@@ -18,8 +18,28 @@ const sans = Inter_Tight({ subsets: ["latin"], weight: ["300", "400", "500", "70
 const mono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  title: `${brand.name} — Portfolio`, // PLACEHOLDER
-  description: "Placeholder description.", // PLACEHOLDER
+  metadataBase: new URL(brand.url),
+  title: {
+    default: `${brand.name}: Custom websites and booking systems for small businesses`,
+    template: `%s · ${brand.name}`,
+  },
+  description:
+    "Custom React and Next.js systems for small businesses: booking with conflict detection, deposits, ordering and dashboards. Built for you, kept running from $19.99/month.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+  openGraph: {
+    type: "website",
+    siteName: brand.name,
+    url: brand.url,
+    images: [{ url: "/images/og-image.jpg", width: 1200, height: 630 }],
+  },
 };
 
 export const viewport: Viewport = { themeColor: "#141314" };

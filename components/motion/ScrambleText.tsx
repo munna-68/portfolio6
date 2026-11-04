@@ -114,7 +114,7 @@ export function ScrambleText({
   const whiteSpace = multiLine ? "normal" : "nowrap";
   const wrapperStyle: CSSProperties = {
     position: "relative",
-    display: multiLine ? "inline" : "inline-block",
+    display: multiLine ? "block" : "inline-block",
     whiteSpace,
   };
 

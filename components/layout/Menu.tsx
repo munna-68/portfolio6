@@ -246,10 +246,10 @@ export function Menu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                 </div>
                 <div className="flex flex-col gap-4">
                   {menuFlyout.people.map((p, i) => (
-                    <div key={p.email} className="overflow-hidden">
+                    <div key={p.name} className="overflow-hidden">
                       <span ref={setMeta(peopleStart + i)} className="block">
                         <AnimatedLink href={`mailto:${p.email}`} className="text-body-sm [overflow-wrap:anywhere] lg:text-body">
-                          {p.name}: {p.email}
+                          {p.name}: {p.role}
                         </AnimatedLink>
                       </span>
                     </div>

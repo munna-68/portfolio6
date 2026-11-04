@@ -22,6 +22,7 @@ export function HowWeWork() {
   const [step, setStep] = useState(0);
   const [turns, setTurns] = useState(0);
   const [squareY, setSquareY] = useState(0);
+  const stepRef = useRef(0);
   const steps = process.steps;
 
   const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
@@ -29,7 +30,10 @@ export function HowWeWork() {
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     const n = steps.length;
     const next = p < FIRST ? 0 : Math.min(Math.floor(((p - FIRST) / (1 - FIRST)) * (n - 1)) + 1, n - 1);
-    if (next !== step) {
+    // Read the latest step from a ref: scroll events can fire faster than React re-renders,
+    // which used to double-count turns and make the square stutter.
+    if (next !== stepRef.current) {
+      stepRef.current = next;
       setStep(next);
       setTurns((t) => t + 1);
     }
@@ -75,8 +79,13 @@ export function HowWeWork() {
                     <div className="relative space-y-48">
                       <motion.div
                         className="absolute top-8 left-[28px] z-10 h-12 w-12 bg-brand"
+                        initial={false}
                         animate={{ y: squareY, rotate: 90 * turns }}
-                        transition={{ duration: 0.8, ease: easings.backInOutSubtle }}
+                        // Same feel as the menu indicator: 0.6s backInOut on both y and rotation.
+                        transition={{
+                          y: { duration: 0.6, ease: easings.backInOut },
+                          rotate: { duration: 0.6, ease: easings.backInOut },
+                        }}
                       />
                       {steps.map((s, i) => {
                         const isActive = i === step;

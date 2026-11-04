@@ -7,7 +7,7 @@ import { easeOutCubic, easings } from "@/lib/easings";
 import { useIdleGSAP } from "@/lib/useIdleGSAP";
 import { getLenis } from "@/lib/scroll";
 import { cx } from "@/lib/cx";
-import { projects, selectedWork, type Project } from "@/config/content";
+import { featuredProjects as projects, selectedWork, type Project } from "@/config/content";
 import { AnimatedHeadline } from "@/components/motion/AnimatedHeadline";
 import { useDualLayerScramble } from "@/components/motion/useDualLayerScramble";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";

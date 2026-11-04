@@ -1,26 +1,29 @@
-import { assets, type AssetSlot } from "@/config/assets";
+import { assets, type AssetSlot, type ImageAsset } from "@/config/assets";
 import { cx } from "@/lib/cx";
 
 /**
  * Image by slot name. The wrapper owns the box (pass an aspect class or fill a parent), so the
  * page never shifts while images load. `fit` defaults to cover.
+ * Pass `image` instead of `slot` for one-off images (e.g. case-study screenshots).
  */
 export function Media({
   slot,
+  image,
   className,
   imgClassName,
   priority = false,
   sizes = "100vw",
   alt,
 }: {
-  slot: AssetSlot;
+  slot?: AssetSlot;
+  image?: ImageAsset;
   className?: string;
   imgClassName?: string;
   priority?: boolean;
   sizes?: string;
   alt?: string;
 }) {
-  const asset = assets[slot];
+  const asset = image ?? assets[slot as AssetSlot];
   return (
     <div className={cx(!/\b(absolute|fixed)\b/.test(className ?? "") && "relative", "overflow-hidden bg-surface", className)}>
       {/* eslint-disable-next-line @next/next/no-img-element */}

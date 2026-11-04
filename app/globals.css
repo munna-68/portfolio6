@@ -5,10 +5,10 @@
    BRAND ACCENT — the single place to change the accent colour.
    Every accent use (preloader, transition square, buttons, scramble glyphs,
    indicator squares, cursor pill, selection, ASCII art tint) reads --accent.
-   TODO(brand): replace #fb460d with your brand orange.
+   SiteKeep brand orange (matches --color-accent in the portfolio4 repo).
    ========================================================================== */
 :root {
-  --accent: #fb460d;
+  --accent: #ff4d00;
   --accent-muted: color-mix(in srgb, var(--accent) 60%, white);
   /* ASCII art: bright end follows the accent, dark end is a deep shadow tone */
   --ascii-color: color-mix(in srgb, var(--accent) 85%, white);
